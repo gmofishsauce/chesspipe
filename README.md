@@ -44,10 +44,11 @@ Crops individual chess diagrams from full page scans.
 
 - **Grid mode** (Book A): Divide each page into a fixed 3×2 grid and slice each cell.
   Includes configurable margins to exclude page numbers and captions.
+  Scans are named by diagram numbers, not pages, e.g. 463-468.jpg has diagrams 463, 464, ..., 468.
 - **Detect mode** (Book B): Use OpenCV to locate chess board patterns based on grid
   line structure and alternating square colors. Outputs bounding boxes, then crops.
-- Output: Individual diagram images saved to `data/diagrams/`, named by
-  `{book}_{page:04d}_{index}.png`
+- **Output**: Individual diagram images saved to `data/diagrams/`, named (for book A) by diagram number, e.g. `463.jpg`. For book B, by book ID-page number-diagram number on page, e.g. "`book_b-p19-1.jpg`.
+  
 
 ### Stage 2 — FEN Extraction (`fen.py`)
 
@@ -60,6 +61,8 @@ Converts each cropped diagram image to a FEN string using the Claude Vision API
 - Flags low-confidence or invalid FENs for human review
 - Output: `data/positions.json` — list of records with image path, FEN, confidence,
   validity status
+  
+  An alternative approach might be to regenerate a chest diagram from the FEN string, train a critic to compare the two the original diagram with the regenerated diagram and then use reinforcement learning until the critic thinks the original and regenerated diagrams are identical.
 
 ### Stage 3 — Human Review (`review.py`)
 
